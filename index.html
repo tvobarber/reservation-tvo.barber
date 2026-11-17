@@ -1,0 +1,433 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Réservation tvo.barber</title>
+<meta name="description" content="Réserve ta coupe avec TVO.BARBER : dégradés, taper, modern mullet, coupe aux ciseaux. À domicile ou sur place.">
+<meta name="theme-color" content="#0B0B0B">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Cormorant+Garamond:wght@500;600&family=Inter:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#0B0B0B; --panel:#141210; --line:#2E2922; --line-strong:#4A4033;
+  --gold:#C9A96E; --gold-soft:#E2C793; --ink:#F2EDE4; --muted:#B5AEA2; --danger:#E5847C;
+  --radius:14px;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Inter,system-ui,sans-serif}
+a{color:var(--gold)} a:hover{color:var(--gold-soft)}
+.wrap{max-width:640px;margin:0 auto;padding:0 16px}
+
+/* En-tête */
+header{text-align:center;padding:48px 0 28px}
+.logo{color:var(--gold);display:inline-flex;flex-direction:column;align-items:center}
+.logo svg{width:64px;height:52px}
+.logo .tvo{font:500 76px/0.9 'Cormorant Garamond',Georgia,serif;letter-spacing:4px;margin-top:10px}
+.logo .barber{font:500 25px/1 Cinzel,Georgia,serif;letter-spacing:8px;margin-top:8px;padding-left:8px}
+header p{color:var(--muted);margin:22px 0 0;font-size:15px}
+
+/* Étapes */
+.step{border-top:1px solid var(--line);padding:28px 0}
+.step h2{font:500 15px/1.2 Cinzel,Georgia,serif;letter-spacing:3px;color:var(--gold);margin:0 0 16px;display:flex;gap:12px;align-items:baseline}
+.step h2 .n{font:600 22px/1 'Cormorant Garamond',serif;color:var(--gold-soft)}
+.hint{color:var(--muted);font-size:14px;margin:-6px 0 14px}
+
+/* Cartes à choix (radio) */
+.choices{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
+.choices.two{grid-template-columns:1fr 1fr}
+.choice{position:relative}
+.choice input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
+.choice span{display:flex;flex-direction:column;justify-content:center;min-height:56px;padding:12px 14px;border:1px solid var(--line-strong);border-radius:var(--radius);background:var(--panel);transition:border-color .15s,background .15s}
+.choice b{font-weight:500}
+.choice small{color:var(--muted);font-size:13px}
+.choice input:checked + span{border-color:var(--gold);background:#1E1912;box-shadow:inset 0 0 0 1px var(--gold)}
+.choice input:focus-visible + span{outline:2px solid var(--gold-soft);outline-offset:2px}
+.choice input:disabled + span{opacity:.35;cursor:not-allowed}
+
+/* Onglets créneau / demande */
+.tabs{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line-strong);border-radius:999px;padding:4px;margin-bottom:18px}
+.tabs .choice span{min-height:44px;border:0;border-radius:999px;background:transparent;align-items:center;text-align:center;font-size:14px}
+.tabs .choice input:checked + span{background:var(--gold);color:#0B0B0B;box-shadow:none}
+
+.days{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;margin-bottom:16px;scrollbar-width:thin}
+.days .choice{flex:0 0 68px}
+.days .choice span{align-items:center;text-align:center;min-height:68px;padding:8px 4px}
+.days .choice b{font:600 22px/1 'Cormorant Garamond',serif}
+.days .choice small{text-transform:capitalize}
+.slots{display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:8px}
+.slots .choice span{align-items:center;min-height:46px;padding:8px}
+.status{color:var(--muted);font-size:14px;padding:6px 0}
+
+/* Champs */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+label.field{display:block;margin-bottom:12px}
+label.field > span{display:block;font-size:14px;color:var(--muted);margin-bottom:6px}
+input[type=text],input[type=tel],input[type=date],input[type=time],textarea{
+  width:100%;min-height:48px;padding:12px 14px;font:inherit;color:var(--ink);background:var(--panel);
+  border:1px solid var(--line-strong);border-radius:12px;color-scheme:dark}
+textarea{min-height:88px;resize:vertical}
+input:focus,textarea:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 1px var(--gold)}
+.at{position:relative}.at input{padding-left:32px}
+.at::before{content:"@";position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--muted)}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+[hidden]{display:none!important}
+
+/* Récap + bouton */
+.summary{border:1px solid var(--line-strong);border-radius:var(--radius);padding:16px;background:var(--panel);margin-bottom:16px;font-size:15px}
+.summary div{display:flex;justify-content:space-between;gap:16px;padding:3px 0}
+.summary dt{color:var(--muted)} .summary dd{margin:0;text-align:right}
+.btn{display:block;width:100%;min-height:54px;border:0;border-radius:999px;background:var(--gold);color:#0B0B0B;
+  font:600 15px/1 Cinzel,Georgia,serif;letter-spacing:3px;cursor:pointer}
+.btn:hover{background:var(--gold-soft)}
+.btn:disabled{opacity:.5;cursor:wait}
+.error{color:var(--danger);font-size:14px;margin:12px 0 0;min-height:1em}
+
+/* Confirmation */
+.done{text-align:center;padding:40px 0 20px}
+.done h2{font:500 30px/1.2 Cinzel,Georgia,serif;color:var(--gold);margin:0 0 12px}
+.done p{color:var(--muted);margin:0 auto 24px;max-width:420px}
+.btn.ghost{background:transparent;color:var(--gold);border:1px solid var(--gold);max-width:280px;margin:0 auto}
+
+/* Infos */
+.infos{border-top:1px solid var(--line);padding:28px 0 56px;color:var(--muted);font-size:14px}
+.infos h3{font:500 14px/1 Cinzel,Georgia,serif;letter-spacing:3px;color:var(--gold);margin:0 0 12px}
+.infos ul{margin:0 0 20px;padding-left:18px}
+.demo{background:#2A2216;color:var(--gold-soft);text-align:center;font-size:13px;padding:8px 16px}
+@media (max-width:420px){ .logo .tvo{font-size:64px} .grid2{grid-template-columns:1fr;gap:0} }
+</style>
+</head>
+<body>
+<div class="demo" id="demoBanner" hidden>Mode démo : les réservations ne sont pas enregistrées.</div>
+
+<div class="wrap">
+  <header>
+    <div class="logo" role="img" aria-label="TVO Barber">
+      <svg viewBox="-100 -80 200 160" fill="none" stroke="currentColor" stroke-width="5" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true">
+        <g transform="rotate(40)"><rect x="-95" y="-14" width="190" height="14" rx="3"/><path d="M-85 0V18M-70 0V18M-55 0V18M-40 0V18M-25 0V18M-10 0V18M5 0V18M20 0V18M35 0V18M50 0V18M65 0V18M80 0V18"/></g>
+        <g transform="rotate(-40)"><rect x="-95" y="-14" width="190" height="14" rx="3"/><path d="M-85 0V18M-70 0V18M-55 0V18M-40 0V18M-25 0V18M-10 0V18M5 0V18M20 0V18M35 0V18M50 0V18M65 0V18M80 0V18"/></g>
+      </svg>
+      <div class="tvo">TVO</div>
+      <div class="barber">BARBER</div>
+    </div>
+    <p>Coupes, dégradés et taper · À domicile ou sur place</p>
+  </header>
+
+  <form id="booking" novalidate>
+    <section class="step">
+      <h2><span class="n">1</span>PRESTATION</h2>
+      <div class="choices" id="services"><p class="status">Chargement…</p></div>
+    </section>
+
+    <section class="step">
+      <h2><span class="n">2</span>LIEU</h2>
+      <div class="choices two">
+        <label class="choice"><input type="radio" name="location" value="chez-moi" checked><span><b>Chez moi</b><small>Adresse envoyée après réservation</small></span></label>
+        <label class="choice"><input type="radio" name="location" value="domicile"><span><b>À domicile</b><small>Je me déplace chez toi</small></span></label>
+      </div>
+      <label class="field" id="addressField" hidden style="margin-top:14px">
+        <span>Ton adresse (bâtiment, étage, code…)</span>
+        <textarea name="address" maxlength="200" autocomplete="street-address"></textarea>
+      </label>
+    </section>
+
+    <section class="step">
+      <h2><span class="n">3</span>CRÉNEAU</h2>
+      <div class="tabs">
+        <label class="choice"><input type="radio" name="mode" value="slot" checked><span>Choisir un créneau</span></label>
+        <label class="choice"><input type="radio" name="mode" value="request"><span>Proposer un horaire</span></label>
+      </div>
+
+      <div id="slotMode">
+        <div class="days" id="days" role="radiogroup" aria-label="Jour"></div>
+        <div class="slots" id="slots" role="radiogroup" aria-label="Heure"></div>
+        <p class="status" id="slotStatus">Choisis d'abord une prestation.</p>
+      </div>
+
+      <div id="requestMode" hidden>
+        <p class="hint">Aucun créneau ne te convient ? Propose ton horaire, je te confirme par message.</p>
+        <div class="grid2">
+          <label class="field"><span>Date</span><input type="date" name="reqDate"></label>
+          <label class="field"><span>Heure</span><input type="time" name="reqTime" step="900"></label>
+        </div>
+      </div>
+    </section>
+
+    <section class="step">
+      <h2><span class="n">4</span>TES INFOS</h2>
+      <div class="grid2">
+        <label class="field"><span>Prénom</span><input type="text" name="firstName" maxlength="60" autocomplete="given-name" required></label>
+        <label class="field"><span>Nom</span><input type="text" name="lastName" maxlength="60" autocomplete="family-name" required></label>
+      </div>
+      <div class="grid2">
+        <label class="field"><span>Compte Instagram</span><div class="at"><input type="text" name="instagram" maxlength="31" autocapitalize="none" autocorrect="off" spellcheck="false" required></div></label>
+        <label class="field"><span>Téléphone</span><input type="tel" name="phone" maxlength="20" autocomplete="tel" required></label>
+      </div>
+      <label class="field"><span>Message (facultatif)</span><textarea name="message" maxlength="500" placeholder="Photo de référence en DM, précisions…"></textarea></label>
+      <label class="hp" aria-hidden="true">Site web<input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+    </section>
+
+    <section class="step">
+      <dl class="summary" id="summary"></dl>
+      <button class="btn" type="submit" id="submitBtn">RÉSERVER</button>
+      <p class="error" id="formError" role="alert"></p>
+    </section>
+  </form>
+
+  <section class="done" id="done" hidden>
+    <h2>C'EST NOTÉ ✂️</h2>
+    <p id="doneText"></p>
+    <button class="btn ghost" type="button" id="againBtn">NOUVELLE RÉSERVATION</button>
+  </section>
+
+  <section class="infos">
+    <h3>À SAVOIR</h3>
+    <ul>
+      <li>Plus de 15 min de retard : le rendez-vous est annulé.</li>
+      <li>Un empêchement ? Préviens au moins 2 h avant pour décaler.</li>
+      <li>Une photo de la coupe voulue en DM, c'est toujours un plus.</li>
+    </ul>
+    <p>Instagram : <a id="instaLink" href="#" target="_blank" rel="noopener"></a></p>
+  </section>
+</div>
+
+<script>
+/* ===== À REMPLIR ===== */
+const API_URL   = 'https://script.google.com/macros/s/AKfycby2wapAmaKMHQtW2NzQkwiTwemrkXzy7dLolHTh4nzSCeqM4tQ9P389uvEVFRd_5_wc3A/exec';            // URL de l'appli Web Apps Script (voir le guide). Vide = mode démo.
+const INSTAGRAM = 'tvo.barber';  // ton pseudo Insta, sans @
+/* ===================== */
+
+const form = document.getElementById('booking');
+const $ = (id) => document.getElementById(id);
+const val = (name) => form.querySelector(`input[name="${name}"]:checked`)?.value || '';
+const DEMO = !API_URL;
+let config = null;
+let slotReq = 0;
+
+$('instaLink').href = 'https://instagram.com/' + INSTAGRAM;
+$('instaLink').textContent = '@' + INSTAGRAM;
+if (DEMO) $('demoBanner').hidden = false;
+
+/* ---------- Données ---------- */
+const DEMO_CONFIG = {
+  daysAhead: 21, slotStep: 15, travelMinutes: 15,
+  hours: {0:[],1:[['17:00', '21:30']],2:[['17:00', '21:30']],3:[['17:00', '21:30']],4:[['17:00', '21:30']],5:[['17:00', '21:30']],6:[['10:00', '20:00']]},
+  services: [
+    {id:'taper',name:'Taper fade',duration:45},{id:'low-fade',name:'Low fade',duration:45},
+    {id:'mid-fade',name:'Mid fade',duration:45},{id:'high-fade',name:'High fade',duration:45},
+    {id:'burst-fade',name:'Burst fade',duration:45},{id:'drop-fade',name:'Drop fade',duration:45},
+    {id:'modern-mullet',name:'Modern mullet',duration:60},{id:'ciseaux',name:'Coupe aux ciseaux',duration:60},
+    {id:'contours',name:'Contours / line-up',duration:20},{id:'barbe',name:'Barbe',duration:20},
+    {id:'coupe-barbe',name:'Coupe + barbe',duration:60}
+  ]
+};
+
+async function api(params) {
+  const url = API_URL + '?' + new URLSearchParams(params);
+  const r = await fetch(url);
+  return r.json();
+}
+
+async function loadConfig() {
+  if (DEMO) return DEMO_CONFIG;
+  const c = await api({ action: 'config' });
+  if (!c.ok) throw new Error('config');
+  return c;
+}
+
+async function loadSlots(date, service, location) {
+  if (!DEMO) {
+    const r = await api({ action: 'slots', date, service, location });
+    return r.ok ? r.slots : [];
+  }
+  // Démo : calcule les créneaux depuis les horaires, avec quelques faux rendez-vous déjà pris
+  const svc = config.services.find(s => s.id === service);
+  const dur = svc.duration + (location === 'domicile' ? 15 : 0);
+  const toMin = t => +t.slice(0,2)*60 + +t.slice(3,5);
+  const ranges = (config.hours[dayOf(date)] || []).map(r => [toMin(r[0]), toMin(r[1])]);
+  const booked = ranges.length ? [[ranges[0][0] + 45, ranges[0][0] + 90]] : [];
+  const minStart = date === isoDate(new Date()) ? nowMin() + 120 : 0;
+  const out = [];
+  ranges.forEach(r => { for (let s = r[0]; s + dur <= r[1]; s += 15) {
+    if (s >= minStart && !booked.some(b => s < b[1] && b[0] < s + dur)) out.push(s);
+  }});
+  return out.map(m => String(Math.floor(m/60)).padStart(2,'0') + ':' + String(m%60).padStart(2,'0'));
+}
+
+/* ---------- Dates ---------- */
+function isoDate(d) { return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0'); }
+function dayOf(iso) { const [y,m,d] = iso.split('-').map(Number); return new Date(y, m-1, d).getDay(); }
+function nowMin() { const n = new Date(); return n.getHours()*60 + n.getMinutes(); }
+function frLong(iso) {
+  const [y,m,d] = iso.split('-').map(Number);
+  return new Date(y, m-1, d).toLocaleDateString('fr-FR', { weekday:'long', day:'numeric', month:'long' });
+}
+
+/* ---------- Rendu ---------- */
+function radio(name, value, html, opts = {}) {
+  const label = document.createElement('label');
+  label.className = 'choice';
+  const input = document.createElement('input');
+  input.type = 'radio'; input.name = name; input.value = value;
+  if (opts.disabled) input.disabled = true;
+  if (opts.aria) input.setAttribute('aria-label', opts.aria);
+  const span = document.createElement('span');
+  span.innerHTML = html;
+  label.append(input, span);
+  return label;
+}
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+function renderServices() {
+  const box = $('services'); box.innerHTML = '';
+  config.services.forEach(s => box.append(radio('service', s.id, `<b>${esc(s.name)}</b>`)));
+}
+
+function renderDays() {
+  const box = $('days'); box.innerHTML = '';
+  const today = new Date();
+  for (let i = 0; i <= config.daysAhead; i++) {
+    const d = new Date(today.getFullYear(), today.getMonth(), today.getDate() + i);
+    const iso = isoDate(d);
+    const closed = !(config.hours[d.getDay()] || []).length;
+    const wd = d.toLocaleDateString('fr-FR', { weekday: 'short' }).replace('.', '');
+    const mo = d.toLocaleDateString('fr-FR', { month: 'short' }).replace('.', '');
+    box.append(radio('day', iso, `<small>${wd}</small><b>${d.getDate()}</b><small>${mo}</small>`,
+      { disabled: closed, aria: frLong(iso) + (closed ? ' (fermé)' : '') }));
+  }
+  const first = box.querySelector('input:not(:disabled)');
+  if (first) first.checked = true;
+}
+
+async function refreshSlots() {
+  const box = $('slots'), status = $('slotStatus');
+  box.innerHTML = '';
+  const service = val('service'), day = val('day'), location = val('location');
+  if (!service) { status.textContent = "Choisis d'abord une prestation."; return; }
+  if (!day) { status.textContent = 'Choisis un jour.'; return; }
+  status.textContent = 'Recherche des créneaux…';
+  const req = ++slotReq;
+  try {
+    const slots = await loadSlots(day, service, location);
+    if (req !== slotReq) return;
+    slots.forEach(t => box.append(radio('time', t, `<b>${t.replace(':','h')}</b>`)));
+    status.textContent = slots.length ? '' : 'Plus de créneau ce jour-là. Essaie un autre jour ou propose un horaire.';
+  } catch (e) {
+    if (req === slotReq) status.textContent = 'Impossible de charger les créneaux. Réessaie dans un instant.';
+  }
+  updateSummary();
+}
+
+function current() {
+  const mode = val('mode');
+  const svc = config?.services.find(s => s.id === val('service'));
+  return {
+    mode, svc,
+    location: val('location'),
+    date: mode === 'slot' ? val('day') : form.reqDate.value,
+    time: mode === 'slot' ? val('time') : form.reqTime.value
+  };
+}
+
+function updateSummary() {
+  const c = current();
+  const rows = [
+    ['Prestation', c.svc ? c.svc.name : '—'],
+    ['Lieu', c.location === 'domicile' ? 'À domicile' : 'Chez moi'],
+    ['Quand', c.date && c.time ? frLong(c.date) + ' à ' + c.time.replace(':','h') : '—']
+  ];
+  $('summary').innerHTML = rows.map(([k,v]) => `<div><dt>${k}</dt><dd>${esc(v)}</dd></div>`).join('');
+  $('submitBtn').textContent = c.mode === 'slot' ? 'RÉSERVER' : 'ENVOYER LA DEMANDE';
+}
+
+/* ---------- Événements ---------- */
+form.addEventListener('change', (e) => {
+  const n = e.target.name;
+  if (n === 'location') $('addressField').hidden = val('location') !== 'domicile';
+  if (n === 'mode') {
+    const slot = val('mode') === 'slot';
+    $('slotMode').hidden = !slot; $('requestMode').hidden = slot;
+  }
+  if (['service','location','day'].includes(n) && val('mode') === 'slot') refreshSlots();
+  updateSummary();
+});
+form.addEventListener('input', (e) => { if (e.target.name === 'reqDate' || e.target.name === 'reqTime') updateSummary(); });
+
+const ERRORS = {
+  service: 'Choisis une prestation.', date: 'Choisis une date valide.', time: 'Choisis un horaire.',
+  name: 'Indique ton prénom et ton nom.', phone: 'Vérifie ton numéro de téléphone.',
+  instagram: 'Indique ton compte Instagram (lettres, chiffres, points, tirets bas).',
+  address: 'Indique ton adresse pour une coupe à domicile.',
+  slot_taken: 'Ce créneau vient d\'être pris. Choisis-en un autre.',
+  busy: 'Beaucoup de demandes en même temps, réessaie dans quelques secondes.'
+};
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const c = current();
+  const err = $('formError');
+  const payload = {
+    type: c.mode, service: c.svc?.id, location: c.location, address: form.address.value.trim(),
+    date: c.date, time: c.time,
+    firstName: form.firstName.value.trim(), lastName: form.lastName.value.trim(),
+    instagram: form.instagram.value.trim().replace(/^@+/, ''), phone: form.phone.value.trim(),
+    message: form.message.value.trim(), website: form.website.value
+  };
+  const problem =
+    !payload.service ? 'service' :
+    !payload.date || payload.date < isoDate(new Date()) ? 'date' :
+    !payload.time ? 'time' :
+    payload.location === 'domicile' && payload.address.length < 5 ? 'address' :
+    !payload.firstName || !payload.lastName ? 'name' :
+    !/^[A-Za-z0-9._]{1,30}$/.test(payload.instagram) ? 'instagram' :
+    !/^[+0-9 .\-()]{8,20}$/.test(payload.phone) ? 'phone' : '';
+  if (problem) { err.textContent = ERRORS[problem]; return; }
+
+  err.textContent = '';
+  const btn = $('submitBtn'); btn.disabled = true; btn.textContent = 'ENVOI…';
+  try {
+    let res;
+    if (DEMO) { await new Promise(r => setTimeout(r, 600)); res = { ok: true }; }
+    else {
+      const r = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(payload) });
+      res = await r.json();
+    }
+    if (!res.ok) {
+      err.textContent = ERRORS[res.error] || 'Une erreur est survenue. Réessaie ou écris-moi sur Instagram.';
+      if (res.error === 'slot_taken') refreshSlots();
+      return;
+    }
+    const when = frLong(payload.date) + ' à ' + payload.time.replace(':','h');
+    $('doneText').textContent = payload.type === 'slot'
+      ? `Ton rendez-vous ${c.svc.name} est réservé le ${when}. Je te recontacte sur Instagram ou par SMS si besoin. À bientôt !`
+      : `Ta demande pour le ${when} est envoyée. Je te confirme rapidement par message.`;
+    form.hidden = true; $('done').hidden = false;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  } catch (e2) {
+    err.textContent = 'Connexion impossible. Vérifie ton réseau et réessaie.';
+  } finally {
+    btn.disabled = false; updateSummary();
+  }
+});
+
+$('againBtn').addEventListener('click', () => {
+  form.reset(); $('addressField').hidden = true; $('slotMode').hidden = false; $('requestMode').hidden = true;
+  $('done').hidden = true; form.hidden = false; renderDays(); refreshSlots();
+});
+
+/* ---------- Démarrage ---------- */
+(async () => {
+  try {
+    config = await loadConfig();
+    renderServices(); renderDays();
+    form.reqDate.min = isoDate(new Date());
+    updateSummary(); refreshSlots();
+  } catch (e) {
+    $('services').innerHTML = '<p class="status">Réservation indisponible pour le moment. Écris-moi sur Instagram.</p>';
+  }
+})();
+</script>
+</body>
+</html>
